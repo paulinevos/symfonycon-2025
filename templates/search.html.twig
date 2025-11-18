@@ -1,0 +1,150 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Find an ancient match{% endblock %}
+
+{% block content %}
+<form id="searchForm">
+    <div class="space-y-">
+        <div class="col-span-full">
+            <label for="prompt" class="block text-sm/6 font-medium text-gray-900 dark:text-white">Description</label>
+            <div class="mt-2">
+                <textarea id="prompt" name="prompt" rows="3" class="block w-full rounded-md bg-white px-3 py-1.5 text-base text-gray-900 outline-1 -outline-offset-1 outline-gray-300 placeholder:text-gray-400 focus:outline-2 focus:-outline-offset-2 focus:outline-emerald-600 sm:text-sm/6 dark:bg-white/5 dark:text-white dark:outline-white/10 dark:placeholder:text-gray-500 dark:focus:outline-emerald-500"></textarea>
+            </div>
+            <p class="mt-3 text-sm/6 text-gray-600 dark:text-gray-400">Describe the artifact you're looking for.</p>
+        </div>
+
+        <div class="col-span-full">
+            <label for="file-upload" class="block text-sm/6 font-medium text-gray-900 dark:text-white">AND/OR add a photo</label>
+            <div class="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10 dark:border-white/25">
+                <div class="text-center">
+
+                    <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="mx-auto size-12 text-gray-300 dark:text-gray-600">
+                        <path d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                    </svg>
+                    <div class="mt-4 text-sm/6 text-center text-gray-600 dark:text-gray-400">
+                        <span id="file-paths"></span>
+                    </div>
+
+                    <div class="mt-4 flex text-sm/6 text-gray-600 dark:text-gray-400">
+                        <label for="file-upload" class="relative cursor-pointer rounded-md bg-transparent font-semibold text-emerald-600 focus-within:outline-2 focus-within:outline-offset-2 focus-within:outline-emerald-600 hover:text-emerald-500 dark:text-emerald-400 dark:focus-within:outline-emerald-500 dark:hover:text-emerald-300">
+                            <span>Upload a file</span>
+                            <input id="file-upload" type="file" name="file-upload" class="sr-only" />
+                        </label>
+                        <p class="pl-1">PNG, JPG, GIF up to 20MB</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="mt-6 flex items-center justify-end gap-x-6">
+            <button type="submit" id="submit-btn" disabled class="disabled:opacity-30 rounded-md bg-emerald-600 px-3 py-2 text-sm font-semibold text-white shadow-xs hover:bg-emerald-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-600 dark:bg-emerald-700 dark:shadow-none dark:focus-visible:outline-emerald-500">
+                Find ancient match
+            </button>
+        </div>
+
+    </div>
+</form>
+
+{# Loader #}
+<div id="loader" class="w-full h-full fixed top-0 left-0 bg-gray-800 hidden opacity-95 z-50">
+    <div class="grid h-56 grid-cols-1 place-items-center justify-center items-center mt-[30vh]">
+        <p class="text-md/5 text-gray-600 dark:text-gray-400">Finding the closest match...</p>
+
+        <div class="fas fa-circle-notch fa-spin fa-5x text-emerald-600"></div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const loader = document.getElementById('loader');
+        const form = document.getElementById('searchForm');
+        const btn = document.getElementById('submit-btn');
+
+        const validateForm = () => {
+            const isValid = () => {
+                for (const [_, value] of Object.entries(form.elements)) {
+                    const val = value.value.trim();
+                    if (val !== '' && val.length > 4) {
+                        return true;
+                    }
+                }
+            }
+
+            if (isValid()) {
+                btn.removeAttribute('disabled');
+            } else {
+                btn.disabled = true;
+            }
+        }
+
+        const setFilePaths = () => {
+            const files = document.getElementById('file-upload').files
+            let paths = []
+
+            for (const [_, value] of Object.entries(files)) {
+                paths.push(value.name);
+            }
+
+            document.getElementById('file-paths').innerHTML = paths.join(', ');
+        }
+
+        form.addEventListener('change', (e) => {
+            validateForm()
+            setFilePaths()
+        });
+        document.getElementById('prompt').addEventListener('keyup', validateForm);
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            loader.classList.toggle('hidden');
+
+            const prompt = document.getElementById('prompt').value;
+            const fileInput = document.getElementById('file-upload');
+            let imageData = '';
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.addEventListener("load", () => {
+                // convert image file to base64 string
+                imageData = reader.result;
+                submitForm(prompt, imageData);
+            });
+
+            if (file) {
+                reader.readAsDataURL(file);
+            } else {
+                submitForm(prompt)
+            }
+        })
+
+        const submitForm = (prompt, imageData) => {
+            fetch('/photo/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest',
+                },
+                body: JSON.stringify({ prompt: prompt, image: imageData })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data && data.url) {
+                    // Redirect to the returned URL
+                    window.location.href = data.url;
+                } else {
+                    alert('Failed to submit image: ' + data.error);
+                }
+            })
+            .catch(() => {
+                alert('Error uploading image.');
+            })
+            .finally(() => {
+                loader.classList.toggle('hidden');
+            });
+        }
+    });
+</script>
+{% endblock %}

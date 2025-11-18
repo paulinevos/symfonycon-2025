@@ -1,0 +1,59 @@
+{% extends "base.html.twig" %}
+
+{% block title %}Closest match{% endblock %}
+
+{% block content %}
+<div>
+    <h2 class="text-2xl text-white font-bold">Closest match</h2>
+    <div class="mt-2 py-4 space-y-6 w-full justify-center">
+        <div class="min-w-full max-w-md flex justify-center space-x-4">
+            {% for url in match.imageUrls %}
+                <div class="flex justify-center bg-white rounded-md px-4">
+                    <img src="{{ url }}" class="max-h-60" alt="Find ID {{ match.id }}"/>
+                </div>
+            {% endfor %}
+        </div>
+
+        <div class="space-x-6 px-4 py-4 rounded-md border border-solid border-gray-700  bg-white/5">
+            <div class="w-full text-xs text-gray-200">
+                <pre class="whitespace-pre-wrap">{{ match.summary|upper  }}</pre>
+            </div>
+
+            <div class="mt-6 flex items-center justify-end gap-x-6">
+                <a target="_blank"
+                   href="https://belowthesurface.amsterdam/en/vondst/{{ match.findId }}"
+                   class="flex items-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-xs bg-emerald-700 hover:bg-emerald-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6 mr-2">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 0 0 3 8.25v10.5A2.25 2.25 0 0 0 5.25 21h10.5A2.25 2.25 0 0 0 18 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                    Below the surface
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block footer %}
+
+<ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-9">
+    {% for candidate in candidates %}
+
+    <li class="relative group">
+        <div class="overflow-hidden w-full h-full flex items-center justify-center rounded-lg bg-gray-100 focus-within:outline-2  outline -outline-offset-1 outline-black/5 focus-within:outline-offset-2 focus-within:outline-indigo-600 dark:bg-gray-800 dark:focus-within:outline-indigo-500">
+            <img src="{{ candidate.imageUrls.0 }}" alt="" class="pointer-events-none max-h-30 rounded-lg object-cover group-hover:opacity-75 dark:outline-white/10" />
+            <a type="button" target="_blank" href="https://belowthesurface.amsterdam/en/vondst/{{ candidate.findId }}" class="absolute inset-0 focus:outline-hidden">
+                <span class="sr-only">View details for IMG_4985.HEIC</span>
+            </a>
+        </div>
+        <pre class="opacity-0 bg-gray-800 rounded-md z-10 absolute p-2 pointer-events-none block text-xs font-medium text-gray-200 group-hover:opacity-80 whitespace-pre-wrap text-gray-200">{{ candidate.summary|upper }}</pre>
+    </li>
+    {% endfor %}
+</ul>
+
+    <a href="{{ url('search') }}"
+   class="flex my-6 w-full justify-center items-center rounded-md px-3 py-2 text-sm font-semibold text-white shadow-xs bg-emerald-700 hover:bg-emerald-500"
+>
+    Try another one
+</a>
+{% endblock %}

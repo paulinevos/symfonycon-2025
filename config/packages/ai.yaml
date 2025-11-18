@@ -1,0 +1,15 @@
+ai:
+    platform:
+        voyage:
+            api_key: '%env(VOYAGE_API_KEY)%'
+        openai:
+            api_key: '%env(OPENAI_API_KEY)%'
+    vectorizer:
+        voyage:
+            platform: 'ai.platform.voyage'
+            model: 'voyage-multimodal-3'
+    indexer:
+        artefacts:
+            loader: 'App\Service\ArtefactLoader'
+            vectorizer: 'ai.vectorizer.voyage'
+            store: 'App\Store\DoctrineODMStore'

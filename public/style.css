@@ -1,0 +1,16 @@
+:root {
+    --mongodb-green: #00ED64;
+    --mongodb-dark-green: #001E2B;
+    --mongodb-forest-green: #023430;
+    --mongodb-dark-blue: #0C2E3C;
+    --mongodb-light-green: #E3FCF7;
+    --mongodb-gray: #F9FBFA;
+    --mongodb-text: #89979B;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--mongodb-dark-green);
+    font-family: 'Inter', sans-serif;
+}
