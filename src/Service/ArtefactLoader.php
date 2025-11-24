@@ -27,7 +27,7 @@ final class ArtefactLoader implements LoaderInterface
     /**
      * @throws TransportExceptionInterface
      */
-    public function load(?string $source, array $options = []): iterable
+    public function load(?string $source = null, array $options = []): iterable
     {
         $schemaManager = $this->dm->getSchemaManager();
         $schemaManager->ensureIndexes();
