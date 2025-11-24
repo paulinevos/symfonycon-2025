@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d7eca7b439f251b28eabc1f44793db36",
+    "content-hash": "ccd8aea8b95bad9037953a976f974e5c",
     "packages": [
         {
             "name": "doctrine/cache",
@@ -1144,16 +1144,16 @@
         },
         {
             "name": "phpdocumentor/type-resolver",
-            "version": "1.11.1",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpDocumentor/TypeResolver.git",
-                "reference": "f626740b38009078de0dc8b2b9dc4e7f749c6eba"
+                "reference": "92a98ada2b93d9b201a613cb5a33584dde25f195"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/f626740b38009078de0dc8b2b9dc4e7f749c6eba",
-                "reference": "f626740b38009078de0dc8b2b9dc4e7f749c6eba",
+                "url": "https://api.github.com/repos/phpDocumentor/TypeResolver/zipball/92a98ada2b93d9b201a613cb5a33584dde25f195",
+                "reference": "92a98ada2b93d9b201a613cb5a33584dde25f195",
                 "shasum": ""
             },
             "require": {
@@ -1196,9 +1196,9 @@
             "description": "A PSR-5 based resolver of Class names, Types and Structural Element Names",
             "support": {
                 "issues": "https://github.com/phpDocumentor/TypeResolver/issues",
-                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.11.1"
+                "source": "https://github.com/phpDocumentor/TypeResolver/tree/1.12.0"
             },
-            "time": "2025-11-21T11:31:57+00:00"
+            "time": "2025-11-21T15:09:14+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
@@ -1503,12 +1503,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-agent.git",
-                "reference": "75aac126d6d8d04b03787c4fdd178f6d5f64d9ec"
+                "reference": "acc3452bf29366def9fe1aeb24c641ff54fc915f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-agent/zipball/75aac126d6d8d04b03787c4fdd178f6d5f64d9ec",
-                "reference": "75aac126d6d8d04b03787c4fdd178f6d5f64d9ec",
+                "url": "https://api.github.com/repos/symfony/ai-agent/zipball/acc3452bf29366def9fe1aeb24c641ff54fc915f",
+                "reference": "acc3452bf29366def9fe1aeb24c641ff54fc915f",
                 "shasum": ""
             },
             "require": {
@@ -1527,6 +1527,8 @@
             },
             "require-dev": {
                 "mrmysql/youtube-transcript": "^0.0.5",
+                "nyholm/psr7": "^1.8",
+                "php-http/discovery": "^1.19",
                 "phpstan/phpstan": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^11.5.13",
@@ -1545,6 +1547,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -1593,7 +1598,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-24T13:17:27+00:00"
+            "time": "2025-11-24T20:53:57+00:00"
         },
         {
             "name": "symfony/ai-bundle",
@@ -1601,12 +1606,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-bundle.git",
-                "reference": "96779b509943983d1959a74a6c17eab3ad8f9227"
+                "reference": "d0b7fca1945144a567337f9940bc45d603af55dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/96779b509943983d1959a74a6c17eab3ad8f9227",
-                "reference": "96779b509943983d1959a74a6c17eab3ad8f9227",
+                "url": "https://api.github.com/repos/symfony/ai-bundle/zipball/d0b7fca1945144a567337f9940bc45d603af55dc",
+                "reference": "d0b7fca1945144a567337f9940bc45d603af55dc",
                 "shasum": ""
             },
             "require": {
@@ -1642,6 +1647,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -1685,7 +1693,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-24T13:12:49+00:00"
+            "time": "2025-11-24T16:47:02+00:00"
         },
         {
             "name": "symfony/ai-chat",
@@ -1693,12 +1701,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-chat.git",
-                "reference": "a097bffdc044624bcd9c18a76bef112fbaf6844c"
+                "reference": "b7cbbffe0eaa3a5aa2dcc82abf4e8061126e5792"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/a097bffdc044624bcd9c18a76bef112fbaf6844c",
-                "reference": "a097bffdc044624bcd9c18a76bef112fbaf6844c",
+                "url": "https://api.github.com/repos/symfony/ai-chat/zipball/b7cbbffe0eaa3a5aa2dcc82abf4e8061126e5792",
+                "reference": "b7cbbffe0eaa3a5aa2dcc82abf4e8061126e5792",
                 "shasum": ""
             },
             "require": {
@@ -1732,6 +1740,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -1781,7 +1792,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-22T00:10:46+00:00"
+            "time": "2025-11-24T16:47:02+00:00"
         },
         {
             "name": "symfony/ai-platform",
@@ -1789,12 +1800,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-platform.git",
-                "reference": "f47248db2f8ea8d98d08101a97e7c9fb05f7564a"
+                "reference": "d2556a3255616268f983deda30a980c4858d0473"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/f47248db2f8ea8d98d08101a97e7c9fb05f7564a",
-                "reference": "f47248db2f8ea8d98d08101a97e7c9fb05f7564a",
+                "url": "https://api.github.com/repos/symfony/ai-platform/zipball/d2556a3255616268f983deda30a980c4858d0473",
+                "reference": "d2556a3255616268f983deda30a980c4858d0473",
                 "shasum": ""
             },
             "require": {
@@ -1835,6 +1846,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -1906,7 +1920,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-24T14:38:15+00:00"
+            "time": "2025-11-24T16:47:02+00:00"
         },
         {
             "name": "symfony/ai-store",
@@ -1914,12 +1928,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/ai-store.git",
-                "reference": "8cfcd9e0f0a83e550c8698b6ab32a542b13d48a2"
+                "reference": "a76ca4ccfdf6a8eb851745554b5c14cc8a8f5f06"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/ai-store/zipball/8cfcd9e0f0a83e550c8698b6ab32a542b13d48a2",
-                "reference": "8cfcd9e0f0a83e550c8698b6ab32a542b13d48a2",
+                "url": "https://api.github.com/repos/symfony/ai-store/zipball/a76ca4ccfdf6a8eb851745554b5c14cc8a8f5f06",
+                "reference": "a76ca4ccfdf6a8eb851745554b5c14cc8a8f5f06",
                 "shasum": ""
             },
             "require": {
@@ -1954,6 +1968,9 @@
                 "thanks": {
                     "url": "https://github.com/symfony/ai",
                     "name": "symfony/ai"
+                },
+                "branch-alias": {
+                    "dev-main": "0.x-dev"
                 }
             },
             "autoload": {
@@ -2016,7 +2033,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2025-11-24T10:12:38+00:00"
+            "time": "2025-11-24T16:47:02+00:00"
         },
         {
             "name": "symfony/asset",
@@ -5857,86 +5874,7 @@
             "time": "2025-10-29T15:56:20+00:00"
         }
     ],
-    "packages-dev": [
-        {
-            "name": "symfony/dotenv",
-            "version": "v7.3.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/symfony/dotenv.git",
-                "reference": "2192790a11f9e22cbcf9dc705a3ff22a5503923a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/symfony/dotenv/zipball/2192790a11f9e22cbcf9dc705a3ff22a5503923a",
-                "reference": "2192790a11f9e22cbcf9dc705a3ff22a5503923a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=8.2"
-            },
-            "conflict": {
-                "symfony/console": "<6.4",
-                "symfony/process": "<6.4"
-            },
-            "require-dev": {
-                "symfony/console": "^6.4|^7.0",
-                "symfony/process": "^6.4|^7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Symfony\\Component\\Dotenv\\": ""
-                },
-                "exclude-from-classmap": [
-                    "/Tests/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Fabien Potencier",
-                    "email": "fabien@symfony.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "https://symfony.com/contributors"
-                }
-            ],
-            "description": "Registers environment variables from a .env file",
-            "homepage": "https://symfony.com",
-            "keywords": [
-                "dotenv",
-                "env",
-                "environment"
-            ],
-            "support": {
-                "source": "https://github.com/symfony/dotenv/tree/v7.3.2"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://github.com/nicolas-grekas",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
-            "time": "2025-07-10T08:29:33+00:00"
-        }
-    ],
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
     "stability-flags": {
