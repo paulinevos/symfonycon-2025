@@ -18,9 +18,6 @@
         "symfony/twig-bundle": "7.3.*",
         "symfony/yaml": "7.3.*"
     },
-    "require-dev": {
-        "symfony/dotenv": "7.3.*"
-    },
     "config": {
         "allow-plugins": {
             "php-http/discovery": true,
