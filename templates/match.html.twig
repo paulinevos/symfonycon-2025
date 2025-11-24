@@ -36,18 +36,21 @@
 
 {% block footer %}
 
-<ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-3 sm:gap-x-6 lg:grid-cols-9">
+<ul role="list" class="grid grid-cols-2 gap-x-4 gap-y-8 sm:grid-cols-4 sm:gap-x-6 lg:grid-cols-6">
     {% for candidate in candidates %}
 
     <li class="relative group">
-        <div class="overflow-hidden w-full h-full flex items-center justify-center rounded-lg bg-gray-100 focus-within:outline-2  outline -outline-offset-1 outline-black/5 focus-within:outline-offset-2 focus-within:outline-indigo-600 dark:bg-gray-800 dark:focus-within:outline-indigo-500">
-            <img src="{{ candidate.imageUrls.0 }}" alt="" class="pointer-events-none max-h-30 rounded-lg object-cover group-hover:opacity-75 dark:outline-white/10" />
+        <div class="overflow-hidden py-2 w-full h-full flex items-center justify-center rounded-lg bg-gray-100 focus-within:outline-2  outline -outline-offset-1 outline-black/5 focus-within:outline-offset-2 focus-within:outline-indigo-600 bg-gray-800 focus-within:outline-indigo-500">
+            <img src="{{ candidate.imageUrls.0 }}" alt="" class="pointer-events-none max-h-30 rounded-lg object-cover group-hover:opacity-75 outline-white/10" />
             <a type="button" target="_blank" href="https://belowthesurface.amsterdam/en/vondst/{{ candidate.findId }}" class="absolute inset-0 focus:outline-hidden">
                 <span class="sr-only">View details for IMG_4985.HEIC</span>
             </a>
         </div>
-        <pre class="opacity-0 bg-gray-800 rounded-md z-10 absolute p-2 pointer-events-none block text-xs font-medium text-gray-200 group-hover:opacity-80 whitespace-pre-wrap text-gray-200">{{ candidate.summary|upper }}</pre>
     </li>
+    <div class="overflow-hidden py-2 w-full h-full flex items-center justify-center rounded-lg bg-gray-100 group-hover:bg-emerald-200 focus-within:outline-2  outline -outline-offset-1 outline-black/5 focus-within:outline-offset-2 focus-within:outline-indigo-600 bg-gray-800 focus-within:outline-indigo-500">
+        <pre class="bg-gray-800 rounded-md p-2 pointer-events-none block text-xs font-medium text-gray-200 whitespace-pre-wrap text-gray-200">{{ candidate.summary|upper }}</pre>
+    </div>
+
     {% endfor %}
 </ul>
 

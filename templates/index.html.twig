@@ -3,9 +3,21 @@
 {% block title %}Celebrity Face Matcher{% endblock %}
 
 {% block content %}
-<div class="flex w-200">
-    <iframe
-        class="w-full h-auto rounded-md overflow-hidden min-h-200 embed-responsive-item"
-        src="https://player.vimeo.com/video/1140065884?badge=0&amp;autoplay=1&amp;loop=1&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="SymfonyCon 2025 artifact matcher"></iframe>
-</div><script src="https://player.vimeo.com/api/player.js"></script>
+    <div class="flex flex-col lg:mx-30 lg:flex-row min-h-100">
+        <div class="flex w-full justify-center pb-10">
+            <iframe
+                class="min-h-150 embed-responsive-item"
+                src="https://player.vimeo.com/video/1140065884?badge=0&amp;autoplay=1&amp;loop=1&amp;autopause=0&amp;player_id=0&amp;app_id=58479" frameborder="0" allow="autoplay; fullscreen; picture-in-picture; clipboard-write; encrypted-media; web-share" referrerpolicy="strict-origin-when-cross-origin" title="SymfonyCon 2025 artifact matcher"></iframe>
+        </div>
+
+        <div class="flex w-full items-start p-0 flex-col ">
+            <div class="justify-start items-start px-30 py-10 text-center text-emerald-500 text-xl">
+                <img class src="{{ asset('images/qr-code.png') }}" alt="Scan this QR code to try out the artifact matcher" />
+            </div>
+            <div class="w-full text-center text-gray-200 text-xl">
+                Scan the QR code to try it out!
+            </div>
+        </div>
+    </div>
+
 {% endblock %}

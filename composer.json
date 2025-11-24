@@ -67,5 +67,8 @@
             "allow-contrib": false,
             "require": "7.3.*"
         }
+    },
+    "require-dev": {
+        "symfony/dotenv": "7.3.*"
     }
 }
