@@ -2,6 +2,10 @@
 
 A Symfony application that uses AI to match photos and descriptions with ancient artefacts from the "Below the Surface" dataset.
 
+Watch Pauline demonstrate the application in Amsterdam:
+
+[![Watch the video](public/images/video.png)](https://vimeo.com/1140065884)
+
 ## Prerequisites
 
 - PHP 8.2 or higher
