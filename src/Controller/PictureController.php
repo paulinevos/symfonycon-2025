@@ -25,7 +25,7 @@ class PictureController extends AbstractController
         return $this->render('search.html.twig');
     }
 
-    #[Route('/photo/submit', name: 'photo_sumbit', methods: ['POST'])]
+    #[Route('/photo/submit', name: 'photo_submit', methods: ['POST'])]
     public function submit(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
