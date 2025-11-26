@@ -27,7 +27,7 @@ use Symfony\Component\Uid\UuidV7;
     ],
     name: 'default',
 )]
-final class Artefact implements EmbeddableDocumentInterface
+class Artefact implements EmbeddableDocumentInterface
 {
     #[ODM\Id(type: Type::UUID, strategy: 'AUTO')]
     public ?UuidV7 $id;

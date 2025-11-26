@@ -9,7 +9,7 @@ use Doctrine\ODM\MongoDB\Types\Type;
 use Symfony\Component\Uid\UuidV7;
 
 #[ODM\Document]
-final class MatchQueryResult
+class MatchQueryResult
 {
     #[ODM\Id(type: Type::UUID, strategy: 'AUTO')]
     public readonly ?UuidV7 $id;

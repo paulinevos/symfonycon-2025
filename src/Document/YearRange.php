@@ -5,7 +5,7 @@ namespace App\Document;
 use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
 
 #[ODM\EmbeddedDocument]
-final readonly class YearRange
+readonly class YearRange
 {
     public function __construct(
         #[ODM\Field(type: 'int64')]
