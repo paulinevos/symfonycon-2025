@@ -14,26 +14,31 @@
         </div>
 
         <div class="col-span-full">
-            <label for="file-upload" class="block text-sm/6 font-medium text-white">AND/OR add a photo</label>
-            <div class="mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10 border-white/25">
-                <div class="text-center">
+            <label class="block text-sm/6 font-medium text-white">AND/OR add a photo
+                <div id="drop-zone" class="mt-2 flex justify-center rounded-lg border border-dashed px-6 py-10 border-white/25 transition-colors duration-200 cursor-pointer hover:border-emerald-400 hover:bg-emerald-900/10">
+                    <div class="text-center">
 
-                    <svg viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="mx-auto size-12 text-gray-600">
-                        <path d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" fill-rule="evenodd" />
-                    </svg>
-                    <div class="mt-4 text-sm/6 text-center text-gray-400">
-                        <span id="file-paths"></span>
-                    </div>
+                        <svg id="image-icon" viewBox="0 0 24 24" fill="currentColor" data-slot="icon" aria-hidden="true" class="mx-auto size-12 text-gray-600">
+                            <path d="M1.5 6a2.25 2.25 0 0 1 2.25-2.25h16.5A2.25 2.25 0 0 1 22.5 6v12a2.25 2.25 0 0 1-2.25 2.25H3.75A2.25 2.25 0 0 1 1.5 18V6ZM3 16.06V18c0 .414.336.75.75.75h16.5A.75.75 0 0 0 21 18v-1.94l-2.69-2.689a1.5 1.5 0 0 0-2.12 0l-.88.879.97.97a.75.75 0 1 1-1.06 1.06l-5.16-5.159a1.5 1.5 0 0 0-2.12 0L3 16.061Zm10.125-7.81a1.125 1.125 0 1 1 2.25 0 1.125 1.125 0 0 1-2.25 0Z" clip-rule="evenodd" fill-rule="evenodd" />
+                        </svg>
 
-                    <div class="mt-4 flex text-sm/6 text-gray-400">
-                        <label for="file-upload" class="relative cursor-pointer rounded-md bg-transparent font-semibold focus-within:outline-2 focus-within:outline-offset-2 text-emerald-400 focus-within:outline-emerald-500 hover:text-emerald-300">
-                            <span>Upload a file</span>
-                            <input id="file-upload" type="file" name="file-upload" class="sr-only" />
-                        </label>
-                        <p class="pl-1">PNG, JPG, GIF up to 20MB</p>
+                        <div id="image-preview" class="mt-4 flex justify-center"></div>
+
+                        <div class="mt-4 text-sm/6 text-center text-gray-400">
+                            <span id="file-paths"></span>
+                        </div>
+
+                        <div class="mt-4 flex text-sm/6 text-gray-400">
+                            <p id="file-upload-btn" class="relative rounded-md bg-transparent font-semibold text-emerald-400">
+                                Upload a file or use camera
+                            </p>
+                            <p class="pl-1">PNG, JPG, GIF up to 20MB</p>
+                        </div>
+
+                        <input id="file-upload" type="file" name="file-upload" class="sr-only" accept="image/*" />
                     </div>
                 </div>
-            </div>
+            </label>
         </div>
 
         <div class="mt-6 flex items-center justify-end gap-x-6">
@@ -61,6 +66,42 @@
         const loader = document.getElementById('loader');
         const form = document.getElementById('searchForm');
         const btn = document.getElementById('submit-btn');
+        const dropZone = document.getElementById('drop-zone');
+        const fileUpload = document.getElementById('file-upload');
+        const fileUploadBtn = document.getElementById('file-upload-btn');
+
+        // --- Drop zone logic ---
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('border-emerald-400', 'bg-emerald-900/10');
+        });
+        dropZone.addEventListener('dragleave', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-emerald-400', 'bg-emerald-900/10');
+        });
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('border-emerald-400', 'bg-emerald-900/10');
+            if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+                fileUpload.files = e.dataTransfer.files;
+                setFilePaths();
+                validateForm();
+                showImagePreview();
+            }
+        });
+
+        // --- Click logic for file only ---
+        fileUploadBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            fileUpload.click();
+        });
+
+        // When file input changes, update file paths and show preview
+        fileUpload.addEventListener('change', () => {
+            setFilePaths();
+            validateForm();
+            showImagePreview();
+        });
 
         const validateForm = () => {
             const isValid = () => {
@@ -80,7 +121,7 @@
         }
 
         const setFilePaths = () => {
-            const files = document.getElementById('file-upload').files
+            const files = fileUpload.files
             let paths = []
 
             for (const [_, value] of Object.entries(files)) {
@@ -90,9 +131,10 @@
             document.getElementById('file-paths').innerHTML = paths.join(', ');
         }
 
+        // Only call validateForm and setFilePaths on form change (not showImagePreview)
         form.addEventListener('change', (e) => {
-            validateForm()
-            setFilePaths()
+            validateForm();
+            setFilePaths();
         });
         document.getElementById('prompt').addEventListener('keyup', validateForm);
 
@@ -144,6 +186,26 @@
             .finally(() => {
                 loader.classList.toggle('hidden');
             });
+        }
+
+        const showImagePreview = () => {
+            const preview = document.getElementById('image-preview');
+            const icon = document.getElementById('image-icon');
+            icon.style.display = 'block';
+            preview.innerHTML = '';
+            const file = fileUpload.files[0];
+            if (file && file.type.startsWith('image/')) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    img.className = "max-h-32 max-w-xs rounded shadow border border-white/20";
+                    img.alt = "Image preview";
+                    preview.appendChild(img);
+                    icon.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
         }
     });
 </script>
