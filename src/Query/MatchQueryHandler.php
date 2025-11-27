@@ -31,7 +31,7 @@ final readonly class MatchQueryHandler
             $messages = new MessageBag(
                 Message::forSystem('You are an image analyzer bot that helps identify objects in images.'),
                 Message::ofUser(
-                    'Describe the object in the foreground, ignoring the background or the person holding it. Try to focus especially on the function, color, shape, material, and finish of the object.',
+                    'Describe the object in the foreground, ignoring the background or the person holding it. Try to focus primarily on the function. Color, shape, material, and finish of the object may also be included.',
                     $image
                 ),
             );
