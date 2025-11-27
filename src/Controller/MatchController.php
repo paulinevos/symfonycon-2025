@@ -28,6 +28,7 @@ final class MatchController extends AbstractController
         return $this->render('match.html.twig', [
             'match' => $match,
             'candidates' => $candidates,
+            'description' => $result->objectDescription
         ]);
     }
 }

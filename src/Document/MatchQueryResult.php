@@ -21,8 +21,11 @@ class MatchQueryResult
     #[ODM\Field(type: 'date')]
     public readonly \DateTimeInterface $createdAt;
 
-    public function __construct(public string $objectDescription, MatchCandidate ...$matches)
-    {
+    public function __construct(
+        #[ODM\Field(type: Type::STRING)]
+        public string $objectDescription,
+        MatchCandidate ...$matches
+    ) {
         $this->matches = new ArrayCollection(array_map(fn (MatchCandidate $candidate) => $candidate->artefact, $matches));
         $this->createdAt = new \DateTimeImmutable();
     }
