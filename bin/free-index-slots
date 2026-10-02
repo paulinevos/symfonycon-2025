@@ -1,0 +1,74 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Drops the two search indexes that belong to older experiments, freeing slots
+ * for the talk slices. Atlas Free/M0 allows three search indexes per cluster.
+ *
+ * Documents are left untouched: only the index goes, and it can be rebuilt from
+ * the same stored vectors without re-embedding anything.
+ *
+ * Usage: bin/free-index-slots [--dry-run]
+ */
+
+use App\Kernel;
+use Symfony\Component\Dotenv\Dotenv;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+(new Dotenv())->bootEnv(__DIR__ . '/../.env');
+
+$dryRun = in_array('--dry-run', $argv, true);
+
+$kernel = new Kernel('dev', true);
+$kernel->boot();
+
+$client = $kernel->getContainer()
+    ->get('doctrine_mongodb.odm.default_document_manager')
+    ->getClient();
+
+$targets = [
+    ['symfony', 'SearchableUser', 'default'],
+    ['vector_search_example', 'Listing', 'default'],
+];
+
+foreach ($targets as [$database, $collection, $index]) {
+    $handle = $client->selectDatabase($database)->selectCollection($collection);
+    $documents = $handle->countDocuments();
+
+    $names = [];
+    foreach ($handle->listSearchIndexes() as $existing) {
+        $names[] = $existing['name'];
+    }
+
+    if (!in_array($index, $names, true)) {
+        printf("skip  %s.%s — no \"%s\" index\n", $database, $collection, $index);
+
+        continue;
+    }
+
+    if ($dryRun) {
+        printf("would drop  %s.%s \"%s\" (%d documents stay)\n", $database, $collection, $index, $documents);
+
+        continue;
+    }
+
+    $handle->dropSearchIndex($index);
+    printf("dropped  %s.%s \"%s\" (%d documents stay)\n", $database, $collection, $index, $documents);
+}
+
+printf("\nRemaining search indexes:\n");
+
+foreach ($client->listDatabaseNames() as $database) {
+    if (in_array($database, ['admin', 'local', 'config'], true)) {
+        continue;
+    }
+
+    $handle = $client->selectDatabase($database);
+
+    foreach ($handle->listCollectionNames() as $collection) {
+        foreach ($handle->selectCollection($collection)->listSearchIndexes() as $index) {
+            printf("  %s.%s  %s\n", $database, $collection, $index['name']);
+        }
+    }
+}
