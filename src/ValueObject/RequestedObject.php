@@ -30,9 +30,9 @@ final class RequestedObject implements EmbeddableDocumentInterface
         );
     }
 
-    public function getId(): UuidV7
+    public function getId(): int|string
     {
-        return $this->uuid;
+        return (string) $this->uuid;
     }
 
     public function getContent(): Collection

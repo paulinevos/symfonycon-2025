@@ -4,6 +4,7 @@ namespace App\Service;
 
 use App\Document\Artefact;
 use App\Document\YearRange;
+use App\Store\DoctrineODMStore;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\AI\Store\Document\LoaderInterface;
 use Symfony\Component\HttpClient\HttpClient;
@@ -19,8 +20,10 @@ final class ArtefactLoader implements LoaderInterface
     private const KEY_FIND_ID = 0;
 
     private readonly HttpClientInterface $httpClient;
-    public function __construct(private readonly DocumentManager $dm)
-    {
+    public function __construct(
+        private readonly DocumentManager $dm,
+        private readonly DoctrineODMStore $store,
+    ) {
         $this->httpClient = HttpClient::create();
     }
 
@@ -29,9 +32,7 @@ final class ArtefactLoader implements LoaderInterface
      */
     public function load(?string $source = null, array $options = []): iterable
     {
-        $schemaManager = $this->dm->getSchemaManager();
-        $schemaManager->ensureIndexes();
-        $schemaManager->createSearchIndexes();
+        $this->store->setup();
 
         foreach ($this->loadDataSet($source ?? self::DATA_SET_URL) as $row) {
             $summary = implode('. ', array_filter(array_map(function ($key) use ($row) {

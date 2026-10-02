@@ -4,15 +4,12 @@ namespace App\Console;
 
 use App\Document\Artefact;
 use Doctrine\ODM\MongoDB\DocumentManager;
-use Doctrine\ODM\MongoDB\Query\Builder;
-use Psr\Log\LoggerInterface;
-use Psr\Log\LogLevel;
 use Symfony\AI\Store\Document\VectorizerInterface;
 use Symfony\Component\Console\Attribute\AsCommand;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Logger\ConsoleLogger;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Style\SymfonyStyle;
 
 #[AsCommand(
     name: 'ai:store:vectorize',
@@ -20,6 +17,8 @@ use Symfony\Component\Console\Output\OutputInterface;
 )]
 final class VectorizeCommand extends Command
 {
+    private const CHUNK_SIZE = 500;
+
     public function __construct(
         private readonly DocumentManager $dm,
         private readonly VectorizerInterface $vectorizer,
@@ -29,54 +28,52 @@ final class VectorizeCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $verbosityLevelMap = [
-            LogLevel::NOTICE => OutputInterface::VERBOSITY_NORMAL,
-            LogLevel::INFO   => OutputInterface::VERBOSITY_NORMAL,
-        ];
+        $io = new SymfonyStyle($input, $output);
 
-        $qb = $this->dm->createQueryBuilder(Artefact::class);
-
-        $logger = new ConsoleLogger($output, $verbosityLevelMap);
-
-        $artefacts = $qb->field('embeddingVector')->equals(null)->getQuery()->execute();
-
-        $chunkSize = 500;
         $counter = 0;
         $chunk = [];
 
-        $logger->info('Starting vectorizer: ' . count($artefacts), ['total_documents' => count($artefacts)]);
-
-        foreach ($artefacts as $document) {
-            $chunk[] = $document;
+        foreach ($this->pendingArtefacts() as $artefact) {
+            $chunk[] = $artefact;
             ++$counter;
 
-            if ($chunkSize === \count($chunk)) {
-                $logger->info("Processing chunk, at {$counter}", ['processed_documents' => $counter]);
-                $this->vectorizeChunk($chunk, $qb);
-
+            if (self::CHUNK_SIZE === \count($chunk)) {
+                $this->vectorizeChunk($chunk);
+                $io->writeln("Vectorized {$counter} artefacts...");
                 $chunk = [];
             }
         }
 
         if ([] !== $chunk) {
-            $this->vectorizeChunk($chunk, $qb);
+            $this->vectorizeChunk($chunk);
         }
 
-        $logger->info('Document processing completed', ['total_documents' => $counter]);
-        $this->dm->flush();
+        $io->success("Vectorized {$counter} artefacts.");
 
-        return 0;
+        return Command::SUCCESS;
     }
 
-    private function vectorizeChunk(array $chunk, Builder $qb): void
+    /**
+     * @return iterable<Artefact>
+     */
+    private function pendingArtefacts(): iterable
     {
+        return $this->dm->createQueryBuilder(Artefact::class)
+            ->field('embeddingVector')->equals(null)
+            ->getQuery()
+            ->execute();
+    }
 
-        $vectorDocuments = $this->vectorizer->vectorize($chunk);
-
-        foreach ($vectorDocuments as $document) {
-            $qb->findAndUpdate()
-                ->field('id')->equals($document->id)
-                ->field('embeddingVector')->set($document->vector)
+    /**
+     * @param list<Artefact> $chunk
+     */
+    private function vectorizeChunk(array $chunk): void
+    {
+        foreach ($this->vectorizer->vectorize($chunk) as $document) {
+            $this->dm->createQueryBuilder(Artefact::class)
+                ->findAndUpdate()
+                ->field('id')->equals($document->getId())
+                ->field('embeddingVector')->set($document->getVector()->getData())
                 ->getQuery()
                 ->execute();
         }

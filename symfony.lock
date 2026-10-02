@@ -24,6 +24,30 @@
     "symfony/ai-bundle": {
         "version": "dev-main"
     },
+    "symfony/ai-open-ai-platform": {
+        "version": "0.14",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "0.1",
+            "ref": "4f925d48b69c145cde2286e2cabfc7bd5eb4aca9"
+        },
+        "files": [
+            "config/packages/ai_open_ai_platform.yaml"
+        ]
+    },
+    "symfony/ai-voyage-platform": {
+        "version": "0.14",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "main",
+            "version": "0.1",
+            "ref": "72b062541e3c7c1c1cee5b8fef9f9264ffa0aeeb"
+        },
+        "files": [
+            "config/packages/ai_voyage_platform.yaml"
+        ]
+    },
     "symfony/console": {
         "version": "7.3",
         "recipe": {

@@ -131,6 +131,9 @@ This command will:
 - Generate vector embeddings using the Voyage AI API
 - Store the embeddings in MongoDB for similarity search
 
+The vector search index is created by `app:load-artefacts`. If the index is
+missing, `/search` fails with `The search index "default" ... is not found`.
+
 **Note:** This process can take a while depending on the number of artefacts and API rate limits.
 
 ## Running the Application

@@ -7,8 +7,7 @@ use Doctrine\ODM\MongoDB\Types\Type;
 use Symfony\AI\Platform\Message\Content;
 use Symfony\AI\Store\Document\EmbeddableDocumentInterface;
 use Symfony\AI\Store\Document\Metadata;
-use Doctrine\ODM\MongoDB\Mapping\Annotations as ODM;
-use Symfony\Component\Uid\Uuid;
+use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 use Symfony\Component\Uid\UuidV7;
 
 #[ODM\Document(collection: 'amsterdam_artefacts')]
@@ -47,9 +46,9 @@ class Artefact implements EmbeddableDocumentInterface
     ) {
     }
 
-    public function getId(): Uuid
+    public function getId(): int|string
     {
-        return Uuid::fromString($this->id);
+        return (string) $this->id;
     }
 
     public function getContent(): string|object

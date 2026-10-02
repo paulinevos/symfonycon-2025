@@ -39,7 +39,6 @@ final readonly class MatchQueryHandler
             $description = $result->asText();
         }
 
-        /** @var VectorizerInterface $vectorizer */
         $vectorized = $this->vectorizer->vectorize(RequestedObject::new($description, $image));
 
         $builder = $this->dm->getRepository(Artefact::class)
@@ -52,7 +51,7 @@ final readonly class MatchQueryHandler
             ->numCandidates(200)
             ->index('default')
             ->path('embeddingVector')
-            ->queryVector($vectorized->vector->getData())
+            ->queryVector($vectorized->getVector()->getData())
             ->project()
             ->field('_id')->expression(0)
             ->field('artefact')->expression('$$ROOT')
