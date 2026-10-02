@@ -1,0 +1,58 @@
+#!/usr/bin/env bash
+#
+# Serve one worktree of the artefact matcher on a given port.
+#
+# Usage: bin/serve <worktree-path> <port>
+
+set -euo pipefail
+
+if [ "$#" -ne 2 ]; then
+    echo "Usage: $(basename "$0") <worktree-path> <port>" >&2
+    echo "Example: $(basename "$0") /Users/paulinevos/ipc1/app 8000" >&2
+    exit 64
+fi
+
+worktree=$1
+port=$2
+
+if [ ! -d "$worktree" ]; then
+    echo "Worktree does not exist: $worktree" >&2
+    exit 66
+fi
+
+worktree=$(cd "$worktree" && pwd)
+
+if [ ! -f "$worktree/bin/console" ]; then
+    echo "Not an artefact matcher worktree (no bin/console): $worktree" >&2
+    exit 66
+fi
+
+case $port in
+    ''|*[!0-9]*)
+        echo "Port must be a number, got: $port" >&2
+        exit 64
+        ;;
+esac
+
+if [ ! -f "$worktree/.env" ] && [ ! -f "$worktree/.env.local" ]; then
+    echo "No .env or .env.local in $worktree." >&2
+    echo "Copy .env.dist and fill in MONGODB_URI, VOYAGE_API_KEY and OPENAI_API_KEY." >&2
+    exit 78
+fi
+
+if [ ! -d "$worktree/vendor" ]; then
+    echo "Installing dependencies..."
+    composer install --working-dir="$worktree"
+fi
+
+# Each worktree gets its own server; stop any stale one on this directory first
+# so restarting does not leave the previous process holding the port.
+symfony server:stop --dir="$worktree" >/dev/null 2>&1 || true
+
+echo "Serving $worktree on http://localhost:$port"
+
+exec symfony server:start \
+    --dir="$worktree" \
+    --port="$port" \
+    --no-tls \
+    --allow-http
