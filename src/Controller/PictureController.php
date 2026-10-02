@@ -29,26 +29,23 @@ class PictureController extends AbstractController
     public function submit(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
+        $prompt = trim($data['prompt'] ?? '');
 
-        $query = new MatchQuery($data['prompt'] ?? null, $data['image'] ?? null);
-
-        foreach ($query->images as $image) {
-            if (strlen($image->asBinary()) / (1024 * 1024) >= 20) {
-                return new JsonResponse(['error' => 'File is too large.']);
-            }
+        if ('' === $prompt) {
+            return new JsonResponse(['error' => 'Describe what you are looking for.'], 422);
         }
 
         try {
-            $result = $this->handler->__invoke($query);
+            $result = $this->handler->__invoke(new MatchQuery($prompt));
 
             return new JsonResponse([
-                'message' => 'Picture processed successfully',
+                'message' => 'Description processed successfully',
                 'url' => $this->generateUrl('match', [
                     'id' => $result->id,
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
             ]);
         } catch (\Exception $e) {
-            return new JsonResponse(['error' => 'Something went wrong: ', $e->getMessage()], 500);
+            return new JsonResponse(['error' => 'Something went wrong: ' . $e->getMessage()], 500);
         }
     }
 }

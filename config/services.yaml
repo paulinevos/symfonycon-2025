@@ -28,7 +28,3 @@ services:
             $documentClass: 'App\Document\Artefact'
 
     Symfony\AI\Store\Document\VectorizerInterface: '@ai.vectorizer.voyage'
-
-    App\Query\MatchQueryHandler:
-        arguments:
-            $openAi: '@ai.platform.openai'
