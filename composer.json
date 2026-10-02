@@ -38,7 +38,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "App\\Tests\\": "tests/"
+            "App\\Tests\\": "tests/",
+            "Mate\\": "mate/src/"
         }
     },
     "replace": {
@@ -70,9 +71,20 @@
         "symfony": {
             "allow-contrib": false,
             "require": "7.3.*"
+        },
+        "ai-mate": {
+            "extension": false,
+            "scan-dirs": [
+                "mate/src"
+            ],
+            "includes": [
+                "mate/config.php"
+            ]
         }
     },
     "require-dev": {
+        "symfony/ai-mate": "^0.14.0",
+        "symfony/ai-symfony-mate-extension": "^0.14.0",
         "symfony/dotenv": "7.3.*"
     }
 }
