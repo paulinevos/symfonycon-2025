@@ -1,0 +1,67 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * Drops Atlas's stock sample_* databases.
+ *
+ * They ship with every new cluster and take ~300 MB of the Free tier's 512 MB,
+ * which is enough to block writes while indexing the artefact corpus. Nothing
+ * in this project reads them, and Atlas can reload them at any time from
+ * Cluster > ... > Load Sample Dataset.
+ *
+ * Only databases whose name starts with "sample_" are considered, so no
+ * application data can be caught by accident.
+ *
+ * Usage: bin/drop-sample-datasets [--dry-run]
+ */
+
+use App\Kernel;
+use Symfony\Component\Dotenv\Dotenv;
+
+require __DIR__ . '/../vendor/autoload.php';
+
+(new Dotenv())->bootEnv(__DIR__ . '/../.env');
+
+$dryRun = in_array('--dry-run', $argv, true);
+
+$kernel = new Kernel('dev', true);
+$kernel->boot();
+
+$client = $kernel->getContainer()
+    ->get('doctrine_mongodb.odm.default_document_manager')
+    ->getClient();
+
+$megabytesOf = static function (string $name) use ($client): float {
+    $database = $client->selectDatabase($name);
+    $total = 0;
+
+    foreach ($database->listCollectionNames() as $collection) {
+        $stats = $database->command(['collStats' => $collection])->toArray()[0];
+        $total += $stats['storageSize'] + ($stats['totalIndexSize'] ?? 0);
+    }
+
+    return $total / 1048576;
+};
+
+$freed = 0.0;
+
+foreach ($client->listDatabaseNames() as $name) {
+    if (!str_starts_with($name, 'sample_')) {
+        continue;
+    }
+
+    $megabytes = $megabytesOf($name);
+    $freed += $megabytes;
+
+    if ($dryRun) {
+        printf("would drop  %-24s %7.1f MB\n", $name, $megabytes);
+
+        continue;
+    }
+
+    $client->dropDatabase($name);
+    printf("dropped  %-24s %7.1f MB\n", $name, $megabytes);
+}
+
+printf("\n%s %.1f MB\n", $dryRun ? 'Would free' : 'Freed', $freed);
+printf("Reload later from Atlas: Cluster > ... > Load Sample Dataset\n");
