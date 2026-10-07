@@ -38,6 +38,15 @@ services:
 
     Symfony\AI\Store\Document\VectorizerInterface: '@ai.vectorizer.voyage'
 
+    App\Query\ObjectDescription:
+        arguments:
+            $openAi: "@ai.platform.openai"
+
+    App\Reranker\VoyageReranker:
+        arguments:
+            $apiKey: "%env(VOYAGE_API_KEY)%"
+            $model: "rerank-3"
+
     App\Evaluation\ImageCache:
         arguments:
             $directory: '%env(GROUND_TRUTH_IMAGE_CACHE)%'

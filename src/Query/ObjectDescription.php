@@ -1,0 +1,43 @@
+<?php
+
+namespace App\Query;
+
+use Symfony\AI\Platform\Message\Content\Image;
+use Symfony\AI\Platform\Message\Message;
+use Symfony\AI\Platform\Message\MessageBag;
+use Symfony\AI\Platform\PlatformInterface;
+
+/**
+ * Turns a photograph into words, for the callers that cannot see one.
+ *
+ * Only the rerankers ask for this. They are text-only, so before they can
+ * compare a query against the artefacts the query has to be in words. The
+ * embedding never asks: there the photograph itself is the better signal, and
+ * a description would only dilute it.
+ *
+ * Describing the photo rather than passing it on is worth the extra call
+ * because a vision model can be told to ignore the background and the hand
+ * holding the object, which an embedding model cannot.
+ */
+final readonly class ObjectDescription
+{
+    private const MODEL = 'gpt-4o-mini';
+
+    private const SYSTEM_PROMPT = 'You are an image analyzer bot that helps identify objects in images.';
+
+    private const USER_PROMPT = 'Describe the object in the foreground, ignoring the background or the person holding it. Try to focus primarily on the function. Color, shape, material, and finish of the object may also be included.';
+
+    public function __construct(private PlatformInterface $openAi)
+    {
+    }
+
+    public function of(Image $image): string
+    {
+        $messages = new MessageBag(
+            Message::forSystem(self::SYSTEM_PROMPT),
+            Message::ofUser(self::USER_PROMPT, $image),
+        );
+
+        return trim($this->openAi->invoke(self::MODEL, $messages)->asText());
+    }
+}
