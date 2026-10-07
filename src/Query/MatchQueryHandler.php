@@ -5,6 +5,7 @@ namespace App\Query;
 use App\Document\Artefact;
 use App\Document\MatchCandidate;
 use App\Document\MatchQueryResult;
+use App\ValueObject\RequestedObject;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\AI\Store\Document\VectorizerInterface;
 
@@ -17,7 +18,11 @@ final readonly class MatchQueryHandler
 
     public function __invoke(MatchQuery $command): MatchQueryResult
     {
-        $vector = $this->vectorizer->vectorize($command->prompt);
+        // The uploaded photo and the typed words go into one multimodal vector,
+        // the same shape the corpus was embedded with.
+        $vectorized = $this->vectorizer->vectorize(
+            RequestedObject::new($command->prompt ?? '', $command->image),
+        );
 
         $builder = $this->dm->getRepository(Artefact::class)
             ->createAggregationBuilder()
@@ -29,7 +34,7 @@ final readonly class MatchQueryHandler
             ->numCandidates(200)
             ->index('default')
             ->path('embeddingVector')
-            ->queryVector($vector->getData())
+            ->queryVector($vectorized->getVector()->getData())
             ->project()
             ->field('_id')->expression(0)
             ->field('artefact')->expression('$$ROOT')
@@ -39,7 +44,10 @@ final readonly class MatchQueryHandler
             ->getAggregation()
             ->execute();
 
-        $result = new MatchQueryResult($command->prompt, ...$matches->toArray());
+        $result = new MatchQueryResult(
+            $command->prompt ?? 'Uploaded image',
+            ...$matches->toArray(),
+        );
 
         $this->dm->persist($result);
         $this->dm->flush();

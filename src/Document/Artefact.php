@@ -11,8 +11,7 @@ use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 use Symfony\Component\Uid\UuidV7;
 
 // Multimodal embeddings: summary text plus the artefact photographs, fused into
-// one vector. This is the production collection, and the only one the web app
-// reads from.
+// one vector. Own collection so these stay comparable only to each other.
 #[ODM\Document(collection: 'amsterdam_artefacts')]
 #[ODM\VectorSearchIndex(
     fields: [

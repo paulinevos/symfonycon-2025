@@ -29,17 +29,22 @@ class PictureController extends AbstractController
     public function submit(Request $request): JsonResponse
     {
         $data = json_decode($request->getContent(), true);
-        $prompt = trim($data['prompt'] ?? '');
 
-        if ('' === $prompt) {
-            return new JsonResponse(['error' => 'Describe what you are looking for.'], 422);
+        try {
+            $query = MatchQuery::fromRequestData($data['prompt'] ?? null, $data['image'] ?? null);
+        } catch (\InvalidArgumentException $e) {
+            return new JsonResponse(['error' => $e->getMessage()], 422);
+        }
+
+        if ($query->exceedsSizeLimit()) {
+            return new JsonResponse(['error' => 'File is too large.'], 413);
         }
 
         try {
-            $result = $this->handler->__invoke(new MatchQuery($prompt));
+            $result = $this->handler->__invoke($query);
 
             return new JsonResponse([
-                'message' => 'Description processed successfully',
+                'message' => 'Picture processed successfully',
                 'url' => $this->generateUrl('match', [
                     'id' => $result->id,
                 ], UrlGeneratorInterface::ABSOLUTE_URL),
