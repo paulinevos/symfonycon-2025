@@ -9,6 +9,7 @@ parameters:
     # Shared across workspaces so the four pipelines read one set of files
     # rather than downloading four copies of the same photographs.
     env(GROUND_TRUTH_IMAGE_CACHE): '%kernel.project_dir%/var/ground-truth-images'
+    env(TYPESAFE_API_KEY): ''
 
 services:
     # default configuration for services in *this* file
@@ -46,6 +47,11 @@ services:
         arguments:
             $apiKey: "%env(VOYAGE_API_KEY)%"
             $model: "rerank-3"
+
+    App\Reranker\JevReranker:
+        arguments:
+            $apiKey: "%env(TYPESAFE_API_KEY)%"
+            $model: "jev-latest"
 
     App\Evaluation\ImageCache:
         arguments:
