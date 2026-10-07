@@ -10,9 +10,10 @@ use Symfony\AI\Store\Document\Metadata;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 use Symfony\Component\Uid\UuidV7;
 
-// Text-only embeddings live in their own collection: they are not comparable
-// with the multimodal vectors the later stages produce.
-#[ODM\Document(collection: 'artefacts_text_only')]
+// Multimodal embeddings: summary text plus the artefact photographs, fused into
+// one vector. This is the production collection, and the only one the web app
+// reads from.
+#[ODM\Document(collection: 'amsterdam_artefacts')]
 #[ODM\VectorSearchIndex(
     fields: [
         [
@@ -51,7 +52,13 @@ class Artefact implements EmbeddableDocumentInterface
 
     public function getContent(): string|object
     {
-        return new Content\Text($this->summary);
+        return new Content\Collection(
+            new Content\Text($this->summary),
+            ...array_map(
+                fn (string $imageUrl) => new Content\ImageUrl($imageUrl),
+                $this->imageUrls
+            )
+        );
     }
 
     public function getMetadata(): Metadata
