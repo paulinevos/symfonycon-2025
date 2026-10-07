@@ -10,9 +10,9 @@ use Symfony\AI\Store\Document\Metadata;
 use Doctrine\ODM\MongoDB\Mapping\Attribute as ODM;
 use Symfony\Component\Uid\UuidV7;
 
-// Multimodal embeddings: summary text plus the artefact photographs, fused into
-// one vector. Own collection so these stay comparable only to each other.
-#[ODM\Document(collection: 'amsterdam_artefacts')]
+// Embedded from the summary plus the FIRST image only; the second image is held
+// back to query with. Own collection so the production one keeps every image.
+#[ODM\Document(collection: 'artefacts_heldout')]
 #[ODM\VectorSearchIndex(
     fields: [
         [
