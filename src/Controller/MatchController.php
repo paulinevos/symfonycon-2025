@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Document\MatchQueryResult;
+use App\Timeline\Timeline;
 use Doctrine\ODM\MongoDB\DocumentManager;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -29,6 +30,7 @@ final class MatchController extends AbstractController
             'match' => $result->closest(),
             'candidates' => $result->runnersUp(),
             'description' => $result->objectDescription,
+            'timeline' => Timeline::fromMatches($result->all()),
         ]);
     }
 }

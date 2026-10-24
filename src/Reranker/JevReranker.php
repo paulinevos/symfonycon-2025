@@ -54,13 +54,13 @@ final readonly class JevReranker
      *
      * @return list<array{index: int, relevance_score: float}> best first
      */
-    public function score(string $query, array $texts, int $topK): array
+    public function score(string $query, array $texts, int $topK, ?string $instruction = null, ?string $framing = null): array
     {
         if ([] === $texts) {
             return [];
         }
 
-        $probabilities = $this->probabilities($query, $texts);
+        $probabilities = $this->probabilities($query, $texts, $instruction, $framing);
 
         $scored = [];
         foreach ($texts as $index => $ignored) {
@@ -82,20 +82,25 @@ final readonly class JevReranker
      *
      * @return array<string, float> keyed by the label each candidate was given
      */
-    private function probabilities(string $query, array $texts): array
+    private function probabilities(string $query, array $texts, ?string $instruction, ?string $framing): array
     {
+        $state = ['request' => $query];
+        if (null !== $framing) {
+            $state['context'] = $framing;
+        }
+
         $response = $this->httpClient->request('POST', self::ENDPOINT, [
             'auth_bearer' => $this->apiKey,
             'json' => [
                 'model' => $this->model,
-                'state' => ['request' => $query],
+                'state' => $state,
                 'questions' => [
                     'best' => [
                         // The discriminator is required; leaving it out is a 422
                         // complaining about a missing tag. Note that "criteria"
                         // sits beside "type", not inside a nested "choice".
                         'type' => 'choice',
-                        'instructions' => self::INSTRUCTIONS,
+                        'instructions' => $instruction ?? self::INSTRUCTIONS,
                         'criteria' => $this->label($texts),
                     ],
                 ],

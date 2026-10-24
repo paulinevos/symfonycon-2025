@@ -53,6 +53,41 @@ services:
             $apiKey: "%env(TYPESAFE_API_KEY)%"
             $model: "jev-latest"
 
+    App\Reranker\JevImageReranker:
+        arguments:
+            $apiKey: "%env(TYPESAFE_API_KEY)%"
+            $model: "jev-latest"
+            $imageCache: '%kernel.project_dir%/var/candidate-images'
+
+    App\Verification\JevImageAsset:
+        arguments:
+            $httpClient: "@http_client"
+            $cacheDirectory: '%kernel.project_dir%/var/candidate-images'
+
+    App\Verification\JudgeFactory:
+        arguments:
+            $openAi: "@ai.platform.openai"
+            $httpClient: "@http_client"
+            $typeSafeApiKey: "%env(TYPESAFE_API_KEY)%"
+            $images: '@App\Verification\JevImageAsset'
+
+    App\Console\ChunkedSelfImageCommand:
+        arguments:
+            $cacheDirectory: '%kernel.project_dir%/var/self-images'
+
+    App\Console\SelfImageCommand:
+        arguments:
+            $cacheDirectory: '%kernel.project_dir%/var/self-images'
+
+    App\Evaluation\CaptionCache:
+        arguments:
+            $directory: '%kernel.project_dir%/var/captions'
+
     App\Evaluation\ImageCache:
         arguments:
             $directory: '%env(GROUND_TRUTH_IMAGE_CACHE)%'
+
+    App\Evaluation\CandidateImageCache:
+        arguments:
+            $directory: '%kernel.project_dir%/var/candidate-images'
+            $httpClient: "@http_client"

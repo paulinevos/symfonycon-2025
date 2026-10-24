@@ -55,4 +55,12 @@ class MatchQueryResult
     {
         return array_slice($this->matches->toArray(), 1);
     }
+
+    /**
+     * @return list<ScoredMatch>
+     */
+    public function all(): array
+    {
+        return $this->matches->toArray();
+    }
 }
